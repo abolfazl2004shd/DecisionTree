@@ -4,15 +4,39 @@ import pandas as pd
 
 import numpy as np
 
-def antropy(y: np.ndarray) -> float:
-    val,counts = np.unique(y, return_counts=True)
+# def gini(y: np.ndarray) -> float:
+#     val,counts = np.unique(y ,return_counts=True)
+#     all = counts.sum()
+#     probabilities = counts / all
     
-    all = counts.sum()
-    probabilities = counts / all
-    
-    result = -np.sum(probabilities * np.log2(probabilities))
-    return result
+#     result = 1 - np.sum(np.pow(probabilities , 2))
+#     return result
 
-y = ['yes' , 'no', 'no' , 'yes', 'yes', 'no', 'no', 'yes']
+# y = ['yes' , 'no', 'no' , 'yes', 'yes', 'no', 'no', 'no']
+# X = 
+# print(gini(y))
 
-print(antropy(y))
+
+
+X = np.array([
+    [0, 1],
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [1, 0]
+])
+
+y = np.array([0, 0, 1, 1, 0])
+
+feature = X[:,1]
+vals,counts = np.unique(feature , return_counts=True)
+
+all = counts.sum()
+result = 0.0
+
+for v,c in (vals, counts):
+cur_y = y[v]
+
+            
+# print(vals ,counts)
+# print(all)

@@ -110,7 +110,6 @@ class MultiNodeCategoricalDecisionTree(BaseEstimator, ClassifierMixin):
 
     def _calculate_entropy(self, y: np.ndarray) -> float:
         val,counts = np.unique(y, return_counts=True)
-    
         all = counts.sum()
         probabilities = counts / all
     
@@ -119,63 +118,39 @@ class MultiNodeCategoricalDecisionTree(BaseEstimator, ClassifierMixin):
 
 
     def _calculate_gini(self, y: np.ndarray) -> float:
-        """
-        Calculate the Gini index of a dataset.
-
-        Parameters
-        ----------
-        y : array-like of shape (n_samples,)
-            The target values (class labels).
-
-        Returns
-        -------
-        gini : float
-            The calculated Gini index.
-        """
-        # TODO: Implement Gini index calculation
-        pass
-
+        val,counts = np.unique(y ,return_counts=True)
+        all = counts.sum()
+        probabilities = counts / all
+    
+        result = 1 - np.sum(np.pow(probabilities , 2))
+        return result
+     
     def _calculate_feature_entropy(self, X: np.ndarray, y: np.ndarray, feature_idx: int) -> float:
-        """
-        Calculate the entropy of a specific feature.
-
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The training input samples.
-        y : array-like of shape (n_samples,)
-            The target values (class labels).
-        feature_idx : int
-            The index of the feature to calculate entropy for.
-
-        Returns
-        -------
-        feature_entropy : float
-            The calculated feature entropy.
-        """
-        # TODO: Implement feature entropy calculation
-        pass
+        feature = X[:,feature_idx]
+        vals,counts = np.unique(feature , return_counts=True)
+        all = counts.sum()
+        result = 0.0
+        
+        for val,count in zip(vals , counts):
+            cur_y = y[val]
+            cur_entropy = self._calculate_entropy(cur_y)
+            result += (count / all) * cur_entropy
+        
+            return result
 
     def _calculate_feature_gini(self, X: np.ndarray, y: np.ndarray, feature_idx: int) -> float:
-        """
-        Calculate the Gini index of a specific feature.
+        feature = X[:,feature_idx]
+        vals,counts = np.unique(feature , return_counts=True)
+        all = counts.sum()
+        result = 0.0
+        
+        for val,count in zip(vals , counts):
+            cur_y = y[val]
+            cur_entropy = self._calculate_gini(cur_y)
+            result += (count / all) * cur_entropy
+        
+            return result
 
-        Parameters
-        ----------
-        X : array-like of shape (n_samples, n_features)
-            The training input samples.
-        y : array-like of shape (n_samples,)
-            The target values (class labels).
-        feature_idx : int
-            The index of the feature to calculate Gini index for.
-
-        Returns
-        -------
-        feature_gini : float
-            The calculated feature Gini index.
-        """
-        # TODO: Implement feature Gini index calculation
-        pass
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
